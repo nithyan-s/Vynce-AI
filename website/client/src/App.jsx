@@ -1,43 +1,57 @@
-import { useState, useEffect } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import TrustedBy from './components/TrustedBy'
 import Features from './components/Features'
 import HowItWorks from './components/HowItWorks'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
+import LiquidEther from './components/LiquidEther'
+import LoadingScreen from './components/LoadingScreen'
+import ScrollToTop from './components/ScrollToTop'
 
 function App() {
-  const [scrollY, setScrollY] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-slate-950">
-      {/* Animated background gradient */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950" />
-        <div 
-          className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}
-        />
-        <div 
-          className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"
-          style={{ transform: `translateY(-${scrollY * 0.2}px)` }}
-        />
-      </div>
+    <>
+      <ScrollToTop />
+      <LoadingScreen />
+      
+      <div className="relative min-h-screen bg-black text-white">
+        {/* Liquid Ether Background - Fixed full screen */}
+        <div className="fixed inset-0 w-full h-full z-0">
+          <LiquidEther
+            colors={['#22c55e', '#10b981', '#14b8a6']} // green-500, emerald-500, teal-500
+            mouseForce={20}
+            cursorSize={100}
+            isViscous={false}
+            viscous={30}
+            iterationsViscous={32}
+            iterationsPoisson={32}
+            resolution={0.5}
+            isBounce={false}
+            autoDemo={true}
+            autoSpeed={0.3}
+            autoIntensity={1.8}
+            takeoverDuration={0.25}
+            autoResumeDelay={3000}
+            autoRampDuration={0.6}
+            className="w-full h-full"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </div>
 
-      <Navbar />
-      <Hero />
-      <Features />
-      <HowItWorks />
-      <CTA />
-      <Footer />
-    </div>
+        {/* Content - Relative positioning for stacking above background */}
+        <div className="relative z-10">
+          <Navbar />
+          <Hero />
+          <TrustedBy />
+          <Features />
+          <HowItWorks />
+          <CTA />
+          <Footer />
+        </div>
+      </div>
+    </>
   )
 }
 

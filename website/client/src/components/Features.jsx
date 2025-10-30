@@ -1,100 +1,118 @@
+import GradualBlur from './GradualBlur';
+
 const Features = () => {
-  const features = [
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-        </svg>
-      ),
-      title: "Voice Commands",
-      description: "Control the web with natural language. Just speak, and VynceAI handles the rest."
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-      ),
-      title: "Smart Automation",
-      description: "Automate repetitive tasks, fill forms, and navigate complex workflows instantly."
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
-      title: "Content Summarization",
-      description: "Get instant summaries of articles, docs, and web pages. Save hours of reading."
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-      ),
-      title: "Intelligent Search",
-      description: "Find information across multiple tabs and websites without lifting a finger."
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-        </svg>
-      ),
-      title: "Privacy First",
-      description: "Your data stays yours. All processing happens locally in your browser."
-    },
-    {
-      icon: (
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-        </svg>
-      ),
-      title: "Context Awareness",
-      description: "VynceAI understands context and adapts to your workflow seamlessly."
-    }
-  ]
-
   return (
-    <section id="features" className="py-24 px-6">
+    <section id="features" className="relative py-32 px-6">
       <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Powerful Features for
-            <span className="text-gradient"> Modern Web Users</span>
-          </h2>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Everything you need to navigate, automate, and optimize your browsing experience.
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <div 
-              key={index}
-              className="group relative bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 rounded-xl p-8 transition-all duration-300 hover:transform hover:scale-105 backdrop-blur-sm"
-            >
-              {/* Icon */}
-              <div className="w-16 h-16 mb-6 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 rounded-lg flex items-center justify-center text-cyan-400 group-hover:from-cyan-500/30 group-hover:to-blue-600/30 transition-all">
-                {feature.icon}
-              </div>
-
-              {/* Content */}
-              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-cyan-400 transition-colors">
-                {feature.title}
-              </h3>
-              <p className="text-slate-400 leading-relaxed">
-                {feature.description}
-              </p>
-
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-cyan-500/5 to-blue-600/5 opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+        
+        {/* Feature 1 - Voice Control */}
+        <div className="relative grid md:grid-cols-2 gap-16 items-center mb-32" style={{position: 'relative'}}>
+          <GradualBlur
+            position="bottom"
+            height="8rem"
+            strength={3}
+            divCount={6}
+            curve="bezier"
+            exponential={true}
+            opacity={1}
+          />
+          <div>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-2xl mb-6">
+              <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+              </svg>
             </div>
-          ))}
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+              Voice-Activated Control
+            </h2>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Command your browser naturally with voice. No typing required - just speak what you want, and VynceAI executes it instantly.
+            </p>
+          </div>
+          <div className="relative">
+            <div className="aspect-video bg-gradient-to-br from-green-500/5 to-emerald-500/5 rounded-2xl border border-green-500/20 flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-green-500/10 via-transparent to-transparent"></div>
+              <div className="w-24 h-24 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full flex items-center justify-center animate-pulse relative z-10">
+                <svg className="w-12 h-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Feature 2 - Smart Automation */}
+        <div className="relative grid md:grid-cols-2 gap-16 items-center mb-32" style={{position: 'relative'}}>
+          <GradualBlur
+            position="bottom"
+            height="8rem"
+            strength={3}
+            divCount={6}
+            curve="bezier"
+            exponential={true}
+            opacity={1}
+          />
+          <div className="order-2 md:order-1 relative">
+            <div className="aspect-video bg-gradient-to-bl from-emerald-500/5 to-teal-500/5 rounded-2xl border border-emerald-500/20 flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tl from-emerald-500/10 via-transparent to-transparent"></div>
+              <div className="w-24 h-24 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full flex items-center justify-center relative z-10">
+                <svg className="w-12 h-12 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="order-1 md:order-2">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-500/10 to-teal-500/10 rounded-2xl mb-6">
+              <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+              Lightning-Fast Automation
+            </h2>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Automate repetitive tasks in seconds. Fill forms, navigate websites, and complete workflows without manual effort.
+            </p>
+          </div>
+        </div>
+
+        {/* Feature 3 - Privacy */}
+        <div className="relative grid md:grid-cols-2 gap-16 items-center" style={{position: 'relative'}}>
+          <GradualBlur
+            position="bottom"
+            height="8rem"
+            strength={3}
+            divCount={6}
+            curve="bezier"
+            exponential={true}
+            opacity={1}
+          />
+          <div>
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-teal-500/10 to-green-500/10 rounded-2xl mb-6">
+              <svg className="w-8 h-8 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-6">
+              Privacy-First Design
+            </h2>
+            <p className="text-xl text-gray-400 leading-relaxed">
+              All processing happens locally in your browser. Your data never leaves your device, ensuring complete privacy and security.
+            </p>
+          </div>
+          <div className="relative">
+            <div className="aspect-video bg-gradient-to-br from-teal-500/5 to-green-500/5 rounded-2xl border border-teal-500/20 flex items-center justify-center relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-tr from-teal-500/10 via-transparent to-transparent"></div>
+              <div className="w-24 h-24 bg-gradient-to-br from-teal-500/20 to-green-500/20 rounded-full flex items-center justify-center relative z-10">
+                <svg className="w-12 h-12 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
   )

@@ -1,55 +1,38 @@
-import { useState, useEffect } from 'react'
-
 const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-slate-950/80 backdrop-blur-lg border-b border-slate-800' : 'bg-transparent'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-6 py-4">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">V</span>
-            </div>
-            <span className="text-xl font-bold text-white">VynceAI</span>
+    <nav className="fixed bottom-12 left-1/2 -translate-x-1/2 z-50">
+      <div className="relative group">
+        {/* Glow effect behind navbar */}
+        <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 via-emerald-500/20 to-teal-500/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        
+        {/* Main navbar with glassy effect */}
+        <div className="relative bg-black/40 backdrop-blur-2xl border border-white/10 rounded-full px-12 py-5 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
+          {/* Inner glow */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none"></div>
+          
+          {/* Shimmer effect */}
+          <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+            <div className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"></div>
           </div>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-slate-300 hover:text-cyan-400 transition-colors">
-              Features
+          
+          {/* Navigation links */}
+          <div className="relative flex items-center gap-12">
+            <a href="#" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
+              <span className="relative z-10">Home</span>
+              <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <a href="#how-it-works" className="text-slate-300 hover:text-cyan-400 transition-colors">
-              How It Works
+            <a href="#features" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
+              <span className="relative z-10">Features</span>
+              <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-            <a href="#" className="text-slate-300 hover:text-cyan-400 transition-colors">
-              Docs
+            <a href="#how-it-works" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
+              <span className="relative z-10">How It Works</span>
+              <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
-          </div>
-
-          {/* CTA Button */}
-          <div className="flex items-center space-x-4">
-            <button className="hidden md:block px-6 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-105 shadow-lg shadow-cyan-500/50">
-              Download Extension
-            </button>
-            <button className="md:hidden p-2 text-slate-300 hover:text-cyan-400">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
+            <a href="#download" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
+              <span className="relative z-10">Download</span>
+              <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
           </div>
         </div>
       </div>
