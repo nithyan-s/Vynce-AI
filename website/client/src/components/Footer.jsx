@@ -2,8 +2,15 @@ import logo from '../assets/v.png'
 
 const Footer = () => {
   return (
-    <footer className="border-t border-white/10 pt-12 pb-32 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
+    <footer className="border-t border-white/10 pt-12 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Large Background Text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
+        <span className="text-[12rem] sm:text-[16rem] md:text-[20rem] font-bold text-white/[0.05] select-none whitespace-nowrap">
+          VynceAI
+        </span>
+      </div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Main Footer Content */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           {/* Brand Column */}
