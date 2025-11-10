@@ -1,0 +1,19 @@
+# VynceAI Backend Dependencies
+# Minimal and focused dependencies for the AI assistant backend
+
+# Core Framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+
+# Environment Management
+python-dotenv==1.0.1
+
+# HTTP Client (for API calls)
+aiohttp==3.11.7
+
+# Validation & Serialization
+pydantic==2.10.3
+pydantic-settings==2.6.1
+
+# AI Service SDK
+google-generativeai==0.8.3
