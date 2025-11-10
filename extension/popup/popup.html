@@ -17,38 +17,133 @@
           <p class="subtitle">Your AI Web Assistant</p>
         </div>
       </div>
-      <div class="status-indicator">
+      <div class="status-indicator" style="display: none;">
         <span class="status-dot"></span>
         <span class="status-text">Ready</span>
       </div>
     </header>
 
-    <!-- Model Selection -->
-    <div class="model-section">
-      <label for="model-select" class="model-label">
-        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- Model Selection - Hidden, using fixed Gemini model -->
+    <div class="model-section" style="display: none;">
+      <div class="model-header">
+        <select id="model-select" class="model-select">
+          <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash</option>
+        </select>
+      </div>
+      
+      <!-- Mode Toggle -->
+      <div class="mode-toggle">
+        <button id="chat-mode-btn" class="mode-btn active">
+          <svg class="mode-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+          </svg>
+          Chat Mode
+        </button>
+        <button id="command-mode-btn" class="mode-btn">
+          <svg class="mode-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          Command Mode
+        </button>
+      </div>
+    </div>
+
+    <!-- Quick Actions Bar -->
+    <div class="quick-actions">
+      <button id="summarize-btn" class="quick-action-btn" title="Summarize this page">
+        <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <span>Summarize Page</span>
+      </button>
+      <button id="analyze-btn" class="quick-action-btn" title="Analyze page content">
+        <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+        </svg>
+        <span>Analyze Content</span>
+      </button>
+      <button id="agent-mode-btn" class="quick-action-btn agent-mode-trigger" title="Enter Agent Mode - Futuristic AI Interface">
+        <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
         </svg>
-        AI Model
-      </label>
-      <select id="model-select" class="model-select">
-        <option value="gpt-4">GPT-4 (OpenAI)</option>
-        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (OpenAI)</option>
-        <option value="claude-3-opus">Claude 3 Opus (Anthropic)</option>
-        <option value="claude-3-sonnet">Claude 3 Sonnet (Anthropic)</option>
-        <option value="gemini-pro">Gemini Pro (Google)</option>
-        <option value="gemini-ultra">Gemini Ultra (Google)</option>
-      </select>
+        <span>Agent Mode</span>
+      </button>
+    </div>
+
+    <!-- Memory Section (Hidden by default) -->
+    <div class="memory-section" id="memory-section" style="display: none;">
+      <div class="memory-header">
+        <div class="memory-header-content">
+          <svg class="memory-header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+          <h3>Memory Storage</h3>
+        </div>
+        <button id="close-memory-btn" class="close-memory-btn" title="Close Memory">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="memory-list" id="memory-list">
+        <!-- Memory items will be dynamically added here -->
+      </div>
+      <div class="memory-stats" id="memory-stats"></div>
     </div>
 
     <!-- Chat Container -->
     <div class="chat-container" id="chat-container">
-      <div class="welcome-message">
+      <!-- Mode Selection (shown on first launch) -->
+      <div class="mode-selection-inline" id="mode-selection-inline" style="display: none;">
+        <div class="mode-welcome">
+          <svg class="mode-welcome-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          <h3>Choose Your AI Mode</h3>
+          <p>Select how you'd like VynceAI to assist you</p>
+        </div>
+
+        <div class="inline-mode-cards">
+          <button class="inline-mode-card" data-mode="site-specific">
+            <div class="inline-mode-icon site-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+              </svg>
+            </div>
+            <div class="inline-mode-content">
+              <h4>Site-Specific Mode</h4>
+              <p>Analyze & interact with web pages</p>
+            </div>
+          </button>
+
+          <button class="inline-mode-card" data-mode="general">
+            <div class="inline-mode-icon general-icon">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+              </svg>
+            </div>
+            <div class="inline-mode-content">
+              <h4>General Mode</h4>
+              <p>AI assistant for any topic</p>
+            </div>
+          </button>
+        </div>
+
+        <p class="mode-change-hint">
+          <svg class="hint-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          You can change this anytime in Settings
+        </p>
+      </div>
+
+      <!-- Welcome Message (shown after mode selection) -->
+      <div class="welcome-message" id="welcome-message">
         <svg class="welcome-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
         </svg>
         <h3>Welcome to VynceAI</h3>
-        <p>Ask me anything or let me help you automate tasks on this webpage.</p>
+        <p>Your intelligent AI browser assistant. Chat naturally - I'll handle everything!</p>
       </div>
     </div>
 
@@ -61,11 +156,24 @@
           placeholder="Ask VynceAI anything..."
           rows="1"
         ></textarea>
+        <button id="voice-btn" class="voice-btn" title="Voice input">
+          <svg class="voice-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+          </svg>
+        </button>
         <button id="send-btn" class="send-btn" title="Send message">
           <svg class="send-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
           </svg>
         </button>
+      </div>
+      <div class="voice-indicator" id="voice-indicator" style="display: none;">
+        <div class="listening-animation">
+          <span class="pulse"></span>
+          <span class="pulse"></span>
+          <span class="pulse"></span>
+        </div>
+        <span class="listening-text" id="voice-status-text">Listening...</span>
       </div>
       <div class="actions">
         <button id="clear-btn" class="action-btn" title="Clear conversation">
@@ -73,6 +181,12 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
           </svg>
           Clear
+        </button>
+        <button id="memory-btn" class="action-btn" title="View Memory">
+          <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+          Memory
         </button>
         <button id="settings-btn" class="action-btn" title="Settings">
           <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,6 +199,70 @@
     </div>
   </div>
 
+  <!-- Agent Mode Overlay -->
+  <div id="agent-mode" class="agent-mode" style="display: none;">
+    <div class="agent-background"></div>
+    <div class="agent-container">
+      <!-- AI Core Canvas -->
+      <div class="ai-core-container">
+        <canvas id="ai-core-canvas" class="ai-core-canvas"></canvas>
+        <div class="core-glow"></div>
+        <div class="ambient-particles"></div>
+      </div>
+      
+      <!-- Agent Status -->
+      <div class="agent-status">
+        <div class="status-text" id="agent-status-text">AI Core Active</div>
+        <div class="status-indicator-dot" id="agent-status-dot"></div>
+      </div>
+      
+      <!-- Agent Controls -->
+      <div class="agent-controls">
+        <button id="agent-voice-btn" class="agent-control-btn voice-control" title="Voice interaction">
+          <svg class="control-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>         </svg>
+          <div class="voice-pulse"></div>
+        </button>
+        <button id="exit-agent-btn" class="agent-control-btn exit-control" title="Exit Agent Mode">
+          <svg class="control-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Voice Response Display -->
+      <div class="voice-response" id="voice-response" style="display: none;">
+        <div class="response-text" id="response-text"></div>
+        <div class="response-waveform">
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+          <span class="wave-bar"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Confirmation Dialog -->
+  <div class="custom-confirm-overlay" id="confirm-overlay" style="display: none;">
+    <div class="custom-confirm-dialog">
+      <div class="confirm-icon">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+      <h3 class="confirm-title">Clear Conversation?</h3>
+      <p class="confirm-message">This will permanently delete all conversation history. This action cannot be undone.</p>
+      <div class="confirm-buttons">
+        <button class="confirm-btn cancel-btn" id="confirm-cancel">Cancel</button>
+        <button class="confirm-btn delete-btn" id="confirm-delete">Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="agent-core.js"></script>
   <script src="popup.js" type="module"></script>
 </body>
 </html>
+
