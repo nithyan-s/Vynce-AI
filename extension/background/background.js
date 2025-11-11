@@ -702,3 +702,37 @@ async function executeAutomationCommand(command) {
 }
 
 console.log('✅ VynceAI Background Service Worker loaded successfully (with automation support)');
+
+// ============================================
+// KEYBOARD SHORTCUT HANDLER
+// ============================================
+
+/**
+ * Handle keyboard shortcuts (Alt+A)
+ */
+chrome.commands.onCommand.addListener((command) => {
+  console.log('🎹 Keyboard shortcut triggered:', command);
+  
+  if (command === "activate-vynce") {
+    // Open the VynceAI popup
+    chrome.action.openPopup()
+      .then(() => {
+        console.log('✅ VynceAI popup opened via keyboard shortcut');
+      })
+      .catch((error) => {
+        // If popup fails to open (e.g., on chrome:// pages), show notification
+        console.warn('⚠️ Could not open popup:', error.message);
+        
+        // Alternative: Create a new tab with the extension URL
+        chrome.tabs.create({ 
+          url: chrome.runtime.getURL("popup/popup.html"),
+          active: true
+        }).then(() => {
+          console.log('✅ VynceAI opened in new tab');
+        });
+      });
+  }
+});
+
+console.log('✅ Keyboard shortcut listener registered (Alt+A)');
+
