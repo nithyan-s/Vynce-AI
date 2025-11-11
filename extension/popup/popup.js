@@ -2016,7 +2016,7 @@ function enterAgentMode() {
     navigator.vibrate([50, 100, 50]);
   }
   
-  showSystemMessage('🤖 Agent Mode Activated - AI Core Online');
+  addSystemMessage('🤖 Agent Mode Activated - AI Core Online');
 }
 
 /**
@@ -2042,7 +2042,7 @@ function exitAgentMode() {
     isAgentModeActive = false;
   }, 800);
   
-  showSystemMessage('👋 Agent Mode Deactivated');
+  addSystemMessage('👋 Agent Mode Deactivated');
 }
 
 /**
@@ -2232,14 +2232,17 @@ function enhanceVoiceRecognitionForAgent() {
         voiceResponse.style.display = 'block';
       }
       
-      // Send to Q&A section instead of main chat
-      qaInput.value = transcript;
-      setTimeout(() => {
-        handleQuestionOnPage();
-        if (voiceResponse) {
-          voiceResponse.style.display = 'none';
-        }
-      }, 1000);
+      // Send to main input instead of deprecated Q&A section
+      if (userInput) {
+        userInput.value = transcript;
+        // Auto-send after a short delay
+        setTimeout(() => {
+          handleSendMessage();
+          if (voiceResponse) {
+            voiceResponse.style.display = 'none';
+          }
+        }, 1000);
+      }
       
     } else if (originalOnResult) {
       originalOnResult(event);
