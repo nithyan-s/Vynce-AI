@@ -300,6 +300,7 @@ async function init() {
   if (modelSelect) {
     modelSelect.value = FIXED_MODEL;
   }
+  
   setupEventListeners();
   initVoiceRecognition();
   
@@ -1054,7 +1055,7 @@ async function handleCommand(command) {
 /**
  * Add a message to the chat container
  */
-function addMessage(sender, content, model = null) {
+async function addMessage(sender, content, model = null) {
   if (!chatContainer) {
     console.error('chatContainer is null, cannot add message');
     return;
@@ -1082,15 +1083,53 @@ function addMessage(sender, content, model = null) {
     <div class="message-content">${formatResponse(content)}</div>
   `;
   
-  // Add TTS button for AI responses
+  // Add action buttons for AI responses
   if (sender === 'ai') {
     const messageActions = document.createElement('div');
     messageActions.className = 'message-actions';
     
+    // Copy button
+    const copyBtn = document.createElement('button');
+    copyBtn.className = 'action-btn copy-btn';
+    copyBtn.title = 'Copy response';
+    copyBtn.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+      </svg>
+    `;
+    copyBtn.onclick = () => copyToClipboard(content, copyBtn);
+    
+    // Thumbs up button
+    const thumbsUpBtn = document.createElement('button');
+    thumbsUpBtn.className = 'action-btn thumbs-up-btn';
+    thumbsUpBtn.title = 'Good response';
+    thumbsUpBtn.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"></path>
+      </svg>
+    `;
+    thumbsUpBtn.onclick = () => handleFeedback('up', thumbsUpBtn, thumbsDownBtn);
+    
+    // Thumbs down button
+    const thumbsDownBtn = document.createElement('button');
+    thumbsDownBtn.className = 'action-btn thumbs-down-btn';
+    thumbsDownBtn.title = 'Bad response';
+    thumbsDownBtn.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14H5.236a2 2 0 01-1.789-2.894l3.5-7A2 2 0 018.736 3h4.018a2 2 0 01.485.06l3.76.94m-7 10v5a2 2 0 002 2h.096c.5 0 .905-.405.905-.904 0-.715.211-1.413.608-2.008L17 13V4m-7 10h2m5-10h2a2 2 0 012 2v6a2 2 0 01-2 2h-2.5"></path>
+      </svg>
+    `;
+    thumbsDownBtn.onclick = () => handleFeedback('down', thumbsDownBtn, thumbsUpBtn);
+    
+    // Speak button
     const speakBtn = document.createElement('button');
-    speakBtn.className = 'speak-btn';
-    speakBtn.innerHTML = '🔊';
+    speakBtn.className = 'action-btn speak-btn';
     speakBtn.title = 'Listen to this response';
+    speakBtn.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+      </svg>
+    `;
     speakBtn.onclick = () => {
       if (speechSynthesis.speaking) {
         stopSpeaking();
@@ -1099,6 +1138,9 @@ function addMessage(sender, content, model = null) {
       }
     };
     
+    messageActions.appendChild(copyBtn);
+    messageActions.appendChild(thumbsUpBtn);
+    messageActions.appendChild(thumbsDownBtn);
     messageActions.appendChild(speakBtn);
     messageDiv.appendChild(messageActions);
     
@@ -2374,6 +2416,98 @@ window.speakText = function(text) {
     originalSpeakText(text);
   }
 };
+
+// ============================================
+// HELPER FUNCTIONS FOR MESSAGE ACTIONS
+// ============================================
+
+/**
+ * Copy text to clipboard
+ */
+async function copyToClipboard(text, button) {
+  try {
+    await navigator.clipboard.writeText(text);
+    
+    // Visual feedback
+    const originalHTML = button.innerHTML;
+    button.innerHTML = `
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    `;
+    button.classList.add('active');
+    
+    setTimeout(() => {
+      button.innerHTML = originalHTML;
+      button.classList.remove('active');
+    }, 2000);
+  } catch (error) {
+    console.error('Failed to copy:', error);
+  }
+}
+
+/**
+ * Handle feedback (thumbs up/down)
+ */
+function handleFeedback(type, activeButton, inactiveButton) {
+  // Toggle active state
+  if (activeButton.classList.contains('active')) {
+    activeButton.classList.remove('active');
+  } else {
+    activeButton.classList.add('active');
+    inactiveButton.classList.remove('active');
+  }
+  
+  // Store feedback (could be sent to analytics)
+  console.log(`Feedback: ${type}`);
+  
+  // Optional: Send to backend
+  // chrome.runtime.sendMessage({ type: 'FEEDBACK', feedback: type });
+}
+
+/**
+ * Update active tab indicator
+ */
+async function updateActiveTabIndicator() {
+  const indicator = document.getElementById('active-tab-indicator');
+  const favicon = document.getElementById('tab-favicon');
+  const title = document.getElementById('tab-title');
+  const url = document.getElementById('tab-url');
+  
+  if (!indicator) return;
+  
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs && tabs[0]) {
+      const tab = tabs[0];
+      
+      // Update favicon
+      if (favicon) {
+        favicon.src = tab.favIconUrl || '../assets/icon16.png';
+        favicon.onerror = () => favicon.src = '../assets/icon16.png';
+      }
+      
+      // Update title
+      if (title) {
+        title.textContent = tab.title || 'Untitled';
+      }
+      
+      // Update URL
+      if (url) {
+        const urlObj = new URL(tab.url);
+        url.textContent = urlObj.hostname;
+      }
+      
+      // Show indicator
+      indicator.style.display = 'flex';
+    }
+  } catch (error) {
+    console.log('Could not update tab indicator:', error);
+    if (indicator) {
+      indicator.style.display = 'none';
+    }
+  }
+}
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {

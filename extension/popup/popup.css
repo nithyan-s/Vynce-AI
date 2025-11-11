@@ -173,28 +173,24 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
-  padding: 10px 14px;
+  padding: 8px 14px;
   background: var(--bg-primary);
   border-bottom: 1px solid var(--border-color);
 }
 
 .quick-action-btn {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 10px 6px;
+  padding: 10px;
   background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
   border: 1px solid var(--border-color);
   border-radius: 12px;
   color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .quick-action-btn::before {
@@ -209,12 +205,36 @@ body {
   transition: opacity 0.2s ease;
 }
 
+.quick-action-btn::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.quick-action-btn:hover::after {
+  opacity: 1;
+}
+
 .quick-action-btn:hover {
   background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
   border-color: var(--green-primary);
   color: var(--green-primary);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
 }
 
 .quick-action-btn:hover::before {
@@ -226,32 +246,28 @@ body {
 }
 
 .quick-action-btn .action-icon {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   stroke-width: 2;
   transition: transform 0.2s ease;
 }
 
 .quick-action-btn:hover .action-icon {
-  transform: scale(1.1);
+  transform: scale(1.15);
 }
 
 .quick-action-btn span {
-  font-size: 11px;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  font-weight: 600;
-  position: relative;
-  z-index: 1;
+  display: none;
 }
 
 @media (max-width: 420px) {
   .quick-action-btn {
-    padding: 14px 6px;
+    padding: 10px;
   }
   
-  .quick-action-btn span {
-    font-size: 10px;
+  .quick-action-btn .action-icon {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -2139,4 +2155,80 @@ body {
 .confirm-btn:active {
   transform: translateY(0) scale(0.98);
 }
+
+/* ===================================
+   Message Action Buttons
+   =================================== */
+
+.message-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(17, 17, 17, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.action-btn:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: var(--green-primary);
+  color: var(--green-primary);
+  transform: scale(1.05);
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.action-btn.active {
+  background: var(--green-primary);
+  border-color: var(--green-primary);
+  color: #000;
+}
+
+.action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.action-btn.copy-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* Site Badge for Messages */
+.message-site-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 9px;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+.message-site-icon {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
 
