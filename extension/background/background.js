@@ -192,6 +192,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       handleOpenSite(request.url, sendResponse);
       return true;
       
+    case 'AUTOMATION_EXECUTE':
+      handleAutomationExecute(request.command, sendResponse);
+      return true;
+      
+    case 'PARSE_AUTOMATION_COMMAND':
+      handleParseAutomationCommand(request.command, sendResponse);
+      return true;
+      
     default:
       console.warn('Unknown message type:', request.type);
       sendResponse({ success: false, error: 'Unknown message type' });
@@ -541,4 +549,156 @@ async function extractContacts(tabId) {
   return results[0]?.result || { emails: [], phones: [] };
 }
 
-console.log('VynceAI Background Service Worker loaded');
+// ============================================
+// AUTOMATION COMMAND HANDLING
+// ============================================
+
+/**
+ * Handle automation execute request
+ */
+async function handleAutomationExecute(command, sendResponse) {
+  try {
+    const result = await executeAutomationCommand(command);
+    sendResponse(result);
+  } catch (error) {
+    sendResponse({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+/**
+ * Handle automation command parsing request
+ */
+async function handleParseAutomationCommand(command, sendResponse) {
+  try {
+    const result = await parseAutomationCommand(command);
+    sendResponse({
+      success: true,
+      parsedCommand: result
+    });
+  } catch (error) {
+    sendResponse({
+      success: false,
+      error: error.message
+    });
+  }
+}
+
+/**
+ * Parse automation command using AI
+ */
+async function parseAutomationCommand(command) {
+  try {
+    const prompt = `Parse this automation command into a JSON structure with 'action' and 'params' fields.
+
+Supported actions:
+- youtube_search: params should have 'query'
+- google_form_fill: params should have 'formData' object with key-value pairs
+- submit_form: no params needed
+- click: params should have 'selector' (element to click)
+- fill: params should have 'selector' and 'value'
+
+Command: "${command}"
+
+Respond ONLY with valid JSON, no explanation.`;
+
+    const response = await callBackend('general', prompt);
+    
+    if (response.success && response.text) {
+      try {
+        // Try to extract JSON from response
+        const jsonMatch = response.text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return parsed;
+        }
+      } catch (e) {
+        console.error('Failed to parse AI response as JSON:', e);
+      }
+    }
+
+    return null;
+
+  } catch (error) {
+    console.error('AI command parsing error:', error);
+    return null;
+  }
+}
+
+/**
+ * Execute automation command on active tab
+ */
+async function executeAutomationCommand(command) {
+  try {
+    console.log('[Background] Executing automation command:', command);
+
+    // Get active tab
+    const [activeTab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    
+    if (!activeTab) {
+      throw new Error('No active tab found');
+    }
+
+    // Step 1: Inject command parser
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: activeTab.id },
+        files: ['content/command-parser.js']
+      });
+      console.log('[Background] Command parser injected');
+    } catch (injectError) {
+      console.log('[Background] Command parser already injected:', injectError.message);
+    }
+
+    // Step 2: Inject automation engine
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: activeTab.id },
+        files: ['content/automation-engine.js']
+      });
+      console.log('[Background] Automation engine injected');
+    } catch (injectError) {
+      console.log('[Background] Automation engine already injected:', injectError.message);
+    }
+
+    // Wait a bit for scripts to initialize
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    // Step 3: Parse the command (convert natural language to structured command)
+    const parseResult = await chrome.tabs.sendMessage(activeTab.id, {
+      type: 'PARSE_COMMAND',
+      command: command
+    });
+
+    if (!parseResult || !parseResult.success) {
+      throw new Error('Failed to parse command: ' + (parseResult?.error || 'Unknown error'));
+    }
+
+    console.log('[Background] Parsed command:', parseResult.parsedCommand);
+
+    // Step 4: Execute the parsed command
+    const response = await chrome.tabs.sendMessage(activeTab.id, {
+      type: 'AUTOMATION_COMMAND',
+      command: parseResult.parsedCommand
+    });
+
+    console.log('[Background] Automation response:', response);
+
+    if (response && response.success) {
+      return {
+        success: true,
+        message: response.data?.message || 'Automation completed successfully'
+      };
+    } else {
+      throw new Error(response?.error || 'Automation failed');
+    }
+
+  } catch (error) {
+    console.error('[Background] Automation command execution failed:', error);
+    throw error;
+  }
+}
+
+console.log('✅ VynceAI Background Service Worker loaded successfully (with automation support)');

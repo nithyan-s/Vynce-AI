@@ -736,6 +736,22 @@ async function handleSendMessage() {
     return;
   }
   
+  // ✅ Detect automation commands (YouTube search, form fill, etc.)
+  if (
+    (messageLower.includes("search") && (messageLower.includes("youtube") || messageLower.includes("yt"))) ||
+    (messageLower.includes("find") && (messageLower.includes("youtube") || messageLower.includes("yt"))) ||
+    (messageLower.includes("look") && messageLower.includes("youtube")) ||
+    messageLower.includes("fill form") ||
+    (messageLower.includes("submit") && messageLower.includes("form")) ||
+    (messageLower.includes("click") && (messageLower.includes("button") || messageLower.includes("link"))) ||
+    messageLower.includes("autofill") ||
+    messageLower.includes("complete form") ||
+    (messageLower.includes("fill") && messageLower.includes("with"))
+  ) {
+    await handleAutomationCommand(message);
+    return;
+  }
+  
   // Check if in command mode
   if (currentMode === 'command') {
     await handleCommand(message);
@@ -806,6 +822,63 @@ async function handleOpenSiteCommand(message, messageLower) {
     
     if (isAgentModeActive) {
       setTimeout(() => speakText(errorMsg), 200);
+    }
+  } finally {
+    setProcessingState(false);
+  }
+}
+
+/**
+ * Handle automation commands (YouTube search, form fill, etc.)
+ */
+async function handleAutomationCommand(message) {
+  setProcessingState(true);
+  const loadingId = addLoadingMessage();
+  
+  try {
+    // Get active tab
+    const tabs = await new Promise(resolve => chrome.tabs.query({ active: true, currentWindow: true }, resolve));
+    if (!tabs || !tabs[0]) {
+      throw new Error("No active tab found");
+    }
+    const tab = tabs[0];
+
+    // Check for restricted pages
+    const forbiddenPrefixes = ["chrome://", "chrome-extension://", "edge://", "about:"];
+    if (forbiddenPrefixes.some(p => tab.url && tab.url.startsWith(p))) {
+      removeLoadingMessage(loadingId);
+      addMessage('ai', "❌ Cannot execute automation on browser internal pages.", FIXED_MODEL);
+      setProcessingState(false);
+      return;
+    }
+
+    // Send automation command to background script
+    const response = await chrome.runtime.sendMessage({
+      type: 'AUTOMATION_EXECUTE',
+      command: message,
+      tabId: tab.id
+    });
+    
+    removeLoadingMessage(loadingId);
+    
+    if (response && response.success) {
+      addMessage('ai', `✅ ${response.message || 'Automation completed successfully'}`, FIXED_MODEL);
+      
+      // Auto-speak in Agent Mode
+      if (isAgentModeActive) {
+        setTimeout(() => speakText(response.message || 'Automation completed'), 200);
+      }
+    } else {
+      throw new Error(response?.error || 'Automation failed');
+    }
+    
+  } catch (error) {
+    console.error('Automation error:', error);
+    removeLoadingMessage(loadingId);
+    addMessage('ai', `❌ Automation failed: ${error.message}`, FIXED_MODEL);
+    
+    if (isAgentModeActive) {
+      setTimeout(() => speakText(`Automation failed: ${error.message}`), 200);
     }
   } finally {
     setProcessingState(false);
@@ -1669,7 +1742,7 @@ async function handleSummarizePage(event) {
     }
 
     // Add system message
-    addSystemMessage('📄 Analyzing page content...');
+    addSystemMessage(' Analyzing page content...');
 
     // get active tab
     const tabs = await new Promise(resolve => chrome.tabs.query({ active: true, currentWindow: true }, resolve));
@@ -1680,7 +1753,7 @@ async function handleSummarizePage(event) {
     const forbiddenPrefixes = ["chrome://", "chrome-extension://", "edge://", "about:"];
     if (forbiddenPrefixes.some(p => tab.url && tab.url.startsWith(p))) {
       console.warn("Cannot inject into this page:", tab.url);
-      showError("❌ This page cannot be summarized due to browser restrictions.");
+      showError(" This page cannot be summarized due to browser restrictions.");
       return;
     }
 
@@ -1696,7 +1769,7 @@ async function handleSummarizePage(event) {
       });
     } catch (injectErr) {
       console.error("Injection failed:", injectErr.message);
-      showError("❌ Failed to inject content script: " + injectErr.message);
+      showError(" Failed to inject content script: " + injectErr.message);
       return;
     }
 
@@ -1714,13 +1787,13 @@ async function handleSummarizePage(event) {
       });
     } catch (msgErr) {
       console.error("Messaging error:", msgErr.message);
-      showError("❌ Could not get page content: " + msgErr.message);
+      showError(" Could not get page content: " + msgErr.message);
       return;
     }
 
     if (!pageData || !pageData.content) {
       console.warn("No content returned from content script", pageData);
-      showError("❌ No readable content found on this page.");
+      showError(" No readable content found on this page.");
       return;
     }
 
@@ -1759,7 +1832,7 @@ Please summarize the main points, key information, and overall theme of this con
 
       if (response.success) {
         const summary = response.data?.response || response.text || response.response;
-        addMessage('ai', `📄 **Page Summary**\n\n${summary}`, FIXED_MODEL);
+        addMessage('ai', ` **Page Summary**\n\n${summary}`, FIXED_MODEL);
         
         // Store in memory with page info
         try {
@@ -1782,13 +1855,13 @@ Please summarize the main points, key information, and overall theme of this con
       }
     } catch (aiError) {
       console.error('AI request failed:', aiError);
-      showError(`❌ AI service error: ${aiError.message}`);
+      showError(` AI service error: ${aiError.message}`);
       removeLoadingMessage(loadingId);
     }
 
   } catch (err) {
     console.error("Error summarizing page:", err);
-    showError("❌ Error summarizing: " + err.message);
+    showError(" Error summarizing: " + err.message);
   } finally {
     // Always restore UI state safely
     const btn = document.getElementById("summarize-btn");
@@ -1842,7 +1915,7 @@ async function handleAnalyzePage() {
     // Check if it's a restricted page
     const restrictedPrefixes = ['chrome://', 'chrome-extension://', 'about:', 'edge://'];
     if (restrictedPrefixes.some(prefix => tab.url?.startsWith(prefix))) {
-      showError('❌ Cannot read content from browser internal pages');
+      showError(' Cannot read content from browser internal pages');
       setProcessingState(false);
       setSafeButtonState(analyzeBtn, false, 'loading');
       return;
@@ -1909,7 +1982,7 @@ ${pageData.fullText ? pageData.fullText.substring(0, 3000) : 'No text content fo
     
     if (response.success) {
       const analysis = response.data?.response || response.text || response.response;
-      addMessage('ai', `🔍 **Content Analysis**\n\n${analysis}`, FIXED_MODEL);
+      addMessage('ai', ` **Content Analysis**\n\n${analysis}`, FIXED_MODEL);
       
       // Save to conversation
       saveConversation();
@@ -2016,7 +2089,7 @@ function enterAgentMode() {
     navigator.vibrate([50, 100, 50]);
   }
   
-  addSystemMessage('🤖 Agent Mode Activated - AI Core Online');
+  addSystemMessage('Agent Mode Activated - AI Core Online');
 }
 
 /**
