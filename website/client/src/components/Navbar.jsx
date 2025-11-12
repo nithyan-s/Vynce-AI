@@ -29,6 +29,10 @@ const Navbar = () => {
               <span className="relative z-10">How It Works</span>
               <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
             </a>
+            <a href="#faqs" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
+              <span className="relative z-10">FAQs</span>
+              <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
+            </a>
             <a href="#download" className="relative text-white hover:text-green-400 transition-all duration-300 font-medium text-base group/link">
               <span className="relative z-10">Download</span>
               <span className="absolute inset-x-0 -bottom-1 h-px bg-gradient-to-r from-green-400 to-emerald-400 scale-x-0 group-hover/link:scale-x-100 transition-transform duration-300 origin-left"></span>
