@@ -60,7 +60,7 @@ const FAQ = () => {
   };
 
   return (
-    <section id="faqs" className="relative py-16 md:py-24 overflow-hidden">
+    <section id="faqs" className="relative py-12 sm:py-16 md:py-24 overflow-hidden">
       {/* Subtle gradient overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-transparent pointer-events-none"></div>
 
@@ -71,18 +71,18 @@ const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-white">
             FAQs
           </h2>
-          <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4 sm:px-0">
             Quick answers to questions you may have about VynceAI.
           </p>
         </motion.div>
 
         {/* FAQ Accordion */}
-        <div className="max-w-3xl mx-auto space-y-3">
+        <div className="max-w-3xl mx-auto space-y-2 sm:space-y-3">
           {faqs.map((faq, index) => (
             <motion.div
               key={index}
@@ -94,19 +94,19 @@ const FAQ = () => {
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full text-left bg-black/40 backdrop-blur-sm border border-gray-800/50 hover:border-green-500/40 rounded-lg p-4 md:p-5 transition-all duration-300 hover:bg-black/50"
+                className="w-full text-left bg-black/40 backdrop-blur-sm border border-gray-800/50 hover:border-green-500/40 rounded-lg p-3 sm:p-4 md:p-5 transition-all duration-300 hover:bg-black/50"
               >
-                <div className="flex items-center justify-between gap-4">
-                  <h3 className="text-base md:text-lg font-medium text-white group-hover:text-green-400 transition-colors">
+                <div className="flex items-center justify-between gap-3 sm:gap-4">
+                  <h3 className="text-sm sm:text-base md:text-lg font-medium text-white group-hover:text-green-400 transition-colors">
                     {faq.question}
                   </h3>
                   <motion.div
                     animate={{ rotate: openIndex === index ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
-                    className="flex-shrink-0 w-5 h-5 flex items-center justify-center"
+                    className="flex-shrink-0 w-4 h-4 sm:w-5 sm:h-5 flex items-center justify-center"
                   >
                     <svg
-                      className="w-5 h-5 text-green-400"
+                      className="w-4 h-4 sm:w-5 sm:h-5 text-green-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -130,7 +130,7 @@ const FAQ = () => {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden"
                     >
-                      <p className="text-gray-400 text-sm md:text-base mt-3 leading-relaxed">
+                      <p className="text-gray-400 text-xs sm:text-sm md:text-base mt-2 sm:mt-3 leading-relaxed">
                         {faq.answer}
                       </p>
                     </motion.div>
@@ -147,21 +147,21 @@ const FAQ = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="text-center mt-12"
+          className="text-center mt-10 sm:mt-12 px-4 sm:px-0"
         >
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3">
             Got more questions?
           </h3>
-          <p className="text-gray-400 text-sm md:text-base mb-6">
+          <p className="text-gray-400 text-xs sm:text-sm md:text-base mb-4 sm:mb-6">
             Contact us for more information.
           </p>
           <a
             href="mailto:nithyan.4417@gmail.com"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-5 py-2.5 sm:px-6 sm:py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs sm:text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105"
           >
             Contact Us
             <svg
-              className="w-4 h-4"
+              className="w-3 h-3 sm:w-4 sm:h-4"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
