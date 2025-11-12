@@ -1,5 +1,6 @@
 import GradualBlur from './GradualBlur';
 import DecryptedText from './DecryptedText';
+import VideoShowcase from './VideoShowcase';
 import logo from '../assets/v.png';
 import { installExtension } from '../utils/downloadExtension';
 
@@ -101,37 +102,8 @@ const Hero = () => {
           </button>
         </div>
 
-        {/* Demo Visual - Placeholder for video */}
-        <div className="relative max-w-6xl mx-auto mt-12 mb-32">
-          <div className="relative rounded-2xl overflow-hidden border border-gray-800 shadow-2xl shadow-green-500/10">
-            {/* Browser chrome */}
-            <div className="bg-gray-900/80 backdrop-blur-sm border-b border-gray-800 px-4 py-3 flex items-center gap-3">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                <div className="w-3 h-3 rounded-full bg-green-500"></div>
-              </div>
-              <div className="flex-1 mx-4 bg-gray-800/50 rounded-md px-4 py-1.5 text-sm text-gray-500">
-                vynceai.com
-              </div>
-            </div>
-            
-            {/* Content area - Video will go here */}
-            <div className="aspect-video bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center relative">
-              <div className="absolute inset-0 bg-gradient-to-t from-green-900/10 via-transparent to-transparent"></div>
-              
-              {/* Centered icon/content */}
-              <div className="relative z-10 text-center">
-                <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl flex items-center justify-center border border-green-500/30 backdrop-blur-sm">
-                  <svg className="w-12 h-12 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500 text-sm">Voice-Activated Browser Control</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Demo Video Showcase */}
+        <VideoShowcase />
       </div>
 
       <GradualBlur
