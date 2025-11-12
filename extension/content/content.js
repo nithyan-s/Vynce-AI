@@ -39,10 +39,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       handleExtractText(request.selector, sendResponse);
       return true;
       
-    case 'AUTOMATION_COMMAND':
-      handleAutomationCommand(request.command, sendResponse);
-      return true;
-      
     case 'PARSE_COMMAND':
       // Forward to command parser - this is handled by command-parser.js
       // But we need to ensure the parser is loaded
@@ -68,6 +64,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
         return true;
       }
+      
+    case 'AUTOMATION_COMMAND':
+      // This is handled by automation-engine.js, not content.js
+      // Silently ignore it here to avoid error messages
+      return false;
       
     default:
       // Handle new summarizePage action for backward compatibility
@@ -430,41 +431,6 @@ function handleExtractText(selector, sendResponse) {
     });
     
   } catch (error) {
-    sendResponse({
-      success: false,
-      error: error.message
-    });
-  }
-}
-
-/**
- * Handle automation command execution
- */
-function handleAutomationCommand(command, sendResponse) {
-  try {
-    console.log('[Content Script] Received automation command:', command);
-    
-    // The automation-engine.js has its own message listener for AUTOMATION_COMMAND
-    // This handler is just a fallback - the actual command should be handled by automation-engine.js
-    
-    // Check if automation engine is loaded
-    if (typeof window.automationEngine === 'undefined') {
-      throw new Error('Automation engine not loaded. Please reload the page.');
-    }
-    
-    // The command should have already been parsed by this point
-    // Execute directly through the engine's internal handler
-    console.log('[Content Script] Forwarding to automation engine');
-    
-    // Since automation-engine.js has its own listener, we shouldn't reach here
-    // But if we do, return a helpful message
-    sendResponse({
-      success: false,
-      error: 'Command should be handled by automation-engine.js listener. If you see this, there may be a timing issue.'
-    });
-    
-  } catch (error) {
-    console.error('[Content Script] Automation error:', error);
     sendResponse({
       success: false,
       error: error.message

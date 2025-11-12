@@ -2498,6 +2498,35 @@ window.speakText = function(text) {
 };
 
 // ============================================
+// SCRIPT INJECTION HELPER
+// ============================================
+
+/**
+ * Helper function to inject content scripts into a tab
+ * @param {number} tabId - The ID of the tab to inject scripts into
+ * @param {string[]} files - Array of script file paths to inject
+ * @returns {Promise<void>}
+ */
+async function executeScriptAsync(tabId, files) {
+  if (!files || files.length === 0) {
+    throw new Error('No files provided for script injection');
+  }
+  
+  for (const file of files) {
+    try {
+      await chrome.scripting.executeScript({
+        target: { tabId: tabId },
+        files: [file]
+      });
+      console.log(`Successfully injected: ${file}`);
+    } catch (error) {
+      console.warn(`Failed to inject ${file}:`, error.message);
+      // Don't throw - script might already be injected
+    }
+  }
+}
+
+// ============================================
 // HELPER FUNCTIONS FOR MESSAGE ACTIONS
 // ============================================
 
