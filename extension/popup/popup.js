@@ -280,6 +280,9 @@ async function init() {
   voiceResponse = document.getElementById('voice-response');
   responseText = document.getElementById('response-text');
   
+  // Check backend status and show notification if needed
+  await checkAndShowBackendStatus();
+  
   // Check if first time user
   if (!modeCheck.selected) {
     // Show inline mode selection
@@ -322,6 +325,83 @@ async function init() {
   if (userInput) {
     userInput.focus();
   }
+}
+
+/**
+ * Check backend status and show notification to user
+ */
+async function checkAndShowBackendStatus() {
+  try {
+    const result = await chrome.storage.local.get(['backendStatus', 'lastConnected']);
+    
+    if (result.backendStatus === 'disconnected' || !result.backendStatus) {
+      // Backend is waking up
+      addSystemMessage('🔄 Backend is waking up... This may take 30-60 seconds on first use.');
+      
+      // Update status indicator
+      if (statusText && statusDot) {
+        statusText.textContent = 'Backend starting...';
+        statusDot.style.background = '#f59e0b'; // Orange
+      }
+      
+      // Poll for backend status
+      pollBackendStatus();
+    } else if (result.backendStatus === 'connected') {
+      // Backend is ready
+      const timeSinceConnect = Date.now() - (result.lastConnected || 0);
+      
+      if (timeSinceConnect < 300000) { // 5 minutes
+        addSystemMessage('✅ Backend is ready!');
+      }
+    }
+  } catch (error) {
+    console.error('Error checking backend status:', error);
+  }
+}
+
+/**
+ * Poll backend status until it's connected
+ */
+async function pollBackendStatus() {
+  let attempts = 0;
+  const maxAttempts = 20; // Poll for up to ~2 minutes (20 * 6 seconds)
+  
+  const checkStatus = async () => {
+    try {
+      const result = await chrome.storage.local.get(['backendStatus']);
+      
+      if (result.backendStatus === 'connected') {
+        addSystemMessage('✅ Backend is ready! You can now use all AI features.');
+        
+        if (statusText && statusDot) {
+          statusText.textContent = 'Ready';
+          statusDot.style.background = '#22c55e'; // Green
+        }
+        
+        return true; // Stop polling
+      }
+      
+      attempts++;
+      
+      if (attempts < maxAttempts) {
+        // Continue polling every 6 seconds
+        setTimeout(checkStatus, 6000);
+      } else {
+        // Max attempts reached
+        addSystemMessage('⚠️ Backend is taking longer than usual. You can still try sending messages.');
+        
+        if (statusText && statusDot) {
+          statusText.textContent = 'Ready (slow connection)';
+          statusDot.style.background = '#f59e0b'; // Orange
+        }
+      }
+    } catch (error) {
+      console.error('Error polling backend status:', error);
+    }
+  };
+  
+  // Start polling after 3 seconds
+  setTimeout(checkStatus, 3000);
 }
 
 /**

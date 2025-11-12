@@ -26,7 +26,8 @@ app.add_middleware(
         "*",  # Allow all during development
         "chrome-extension://*",  # Allow Chrome extensions
         "http://localhost:*",  # Allow localhost
-        "http://127.0.0.1:*"  # Allow 127.0.0.1
+        "http://127.0.0.1:*",  # Allow 127.0.0.1
+        "https://vynceai.onrender.com"  # Production backend
     ],
     allow_credentials=True,
     allow_methods=["*"],
