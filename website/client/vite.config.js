@@ -11,8 +11,6 @@ export default defineConfig({
     }),
   ],
   build: {
-    // Generate source maps for production debugging
-    sourcemap: false,
     // Optimize chunks
     rollupOptions: {
       output: {
@@ -23,13 +21,6 @@ export default defineConfig({
             }
           }
         },
-      },
-    },
-    // Minify output
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console logs in production
       },
     },
   },
