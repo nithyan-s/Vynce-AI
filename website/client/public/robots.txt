@@ -1,0 +1,26 @@
+# robots.txt for VynceAI
+# https://vynceai.imnitz.tech/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow admin or private areas (if any in future)
+Disallow: /admin/
+Disallow: /private/
+
+# Allow important resources
+Allow: /assets/
+Allow: /src/assets/
+
+# Sitemap location
+Sitemap: https://vynceai.imnitz.tech/sitemap.xml
+
+# Crawl-delay (optional, helps with server load)
+Crawl-delay: 1
+
+# Block bad bots (optional)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10

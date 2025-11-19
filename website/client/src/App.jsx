@@ -10,16 +10,18 @@ import Footer from './components/Footer'
 import LiquidEther from './components/LiquidEther'
 import LoadingScreen from './components/LoadingScreen'
 import ScrollToTop from './components/ScrollToTop'
+import SEO from './components/SEO'
 
 function App() {
   return (
     <>
+      <SEO />
       <ScrollToTop />
       <LoadingScreen />
       
-      <div className="relative min-h-screen bg-black text-white">
+      <main className="relative min-h-screen bg-black text-white">
         {/* Liquid Ether Background - Fixed full screen */}
-        <div className="fixed inset-0 w-full h-full z-0">
+        <div className="fixed inset-0 w-full h-full z-0" role="presentation" aria-hidden="true">
           <LiquidEther
             colors={['#22c55e', '#10b981', '#14b8a6']} // green-500, emerald-500, teal-500
             mouseForce={20}
@@ -52,7 +54,7 @@ function App() {
           <CTA />
           <Footer />
         </div>
-      </div>
+      </main>
     </>
   )
 }

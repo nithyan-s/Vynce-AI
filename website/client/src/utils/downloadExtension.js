@@ -438,6 +438,15 @@ const showDownloadSuccessMessage = () => {
  * @param {string} platform - 'chrome', 'edge', 'mac', or 'windows'
  */
 export const installExtension = (platform = 'chrome') => {
+  // Track download event in Google Analytics
+  if (window.gtag) {
+    gtag('event', 'download_extension', {
+      'event_category': 'Extension',
+      'event_label': platform,
+      'value': 1
+    });
+  }
+  
   // Check if browser supports Chrome extensions
   const browserType = getBrowserType();
   
